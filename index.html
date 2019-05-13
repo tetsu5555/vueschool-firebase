@@ -56,17 +56,19 @@
             },
 
 
-            methods: {
-                register () {
-                    firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-                },
-                signout () {
-                    firebase.auth().signOut()
-                },
-                signIn () {
-                    firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-                }
+        methods: {
+            register () {
+                firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                    .catch(error => alert('😓' + error.message))
             },
+            signout () {
+                firebase.auth().signOut()
+            },
+            signIn () {
+                firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                    .catch(error => alert('😓' + error.message))
+            }
+        },
 
 
             created () {
