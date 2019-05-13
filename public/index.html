@@ -24,6 +24,12 @@
                 <input v-model="photoURL" />
                 <button>Update</button>
             </form>
+
+            <form @submit.prevent="updateEmail">
+                <h2>Update Email</h2>
+                <input v-model="email" />
+                <button>Update</button>
+            </form>
         </div>
 
         <div v-else>
@@ -68,6 +74,7 @@
                 password: '',
                 displayName: null,
                 photoURL: null,
+                email: null,
                 authUser: null
             },
 
@@ -95,6 +102,9 @@
                         displayName: this.displayName,
                         photoURL: this.photoURL
                     })
+                },
+                updateEmail () {
+                    this.authUser.updateEmail(this.email)
                 }
             },
 
@@ -106,6 +116,7 @@
                     if (user) {
                         this.displayName = user.displayName;
                         this.photoURL = user.photoURL;
+                        this.email = user.email;
                     }
                 })
             }
