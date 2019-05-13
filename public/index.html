@@ -18,7 +18,7 @@
                 <img v-if="linkedPassword" src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_email.svg" alt="">
             </h2>
             <img :src="authUser.photoURL" height="150">
-            <p>What's up {{ authUser.displayName || 'friend' }}</p>
+            <p>What's up {{ authUser.displayName || 'friend' }} we know you like {{ authUser.favoriteFood || 'food' }}</p>
             <button @click="signout">Signout</button>
             <button v-if="!linkedGoogle" @click="linkGoogle">linkGoogle</button>
             <button v-else @click="unlinkGoogle">unlinkGoogle</button>
@@ -27,6 +27,12 @@
                 <h2>Update Profile</h2>
                 <input v-model="displayName" />
                 <input v-model="photoURL" />
+                <button>Update</button>
+            </form>
+
+            <form @submit.prevent="updateCustomDetail">
+                <h2>Update Additional Detail</h2>
+                <input v-model="favoriteFood" placeholder="Your favorite Food"/>
                 <button>Update</button>
             </form>
 
@@ -87,6 +93,7 @@
                 photoURL: null,
                 email: null,
                 newPassword: null,
+                favoriteFood: null,
                 authUser: null
             },
 
@@ -135,6 +142,11 @@
                         photoURL: this.photoURL
                     })
                 },
+                updateCustomDetail () {
+                    // setではなくupdateを使う、setの場合、値があった場合にデータがsetできず失われてしまうため
+                    firebase.database().ref('users').child(this.authUser.uid)
+                        .update({favoriteFood: this.favoriteFood})
+                },
                 updateEmail () {
                     this.authUser.updateEmail(this.email)
                 },
@@ -154,6 +166,16 @@
                         this.displayName = user.displayName;
                         this.photoURL = user.photoURL;
                         this.email = user.email;
+                        // valueイベントをlistenすると、callbackの引数にsnapshotが渡ってくる。
+                        // snapshotの中に、favoriteFoodが含まれている
+                        firebase.database().ref('users').child(user.uid).once('value', snapshot => {
+                            if (snapshot.val()) {
+                                this.favoriteFood = snapshot.val().favoriteFood
+                                // authUserに追加のプロパティをsetしたい場合は、Vue.setをつかう
+                                // vueはプロパティの追加や削除を検知することができないため
+                                Vue.set(this.authUser, 'favoriteFood', this.favoriteFood)
+                            }
+                        })
                     }
                 })
             }
