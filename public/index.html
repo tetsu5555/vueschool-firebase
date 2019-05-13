@@ -31,6 +31,11 @@
                 <input type="password" v-model="password" placeholder="Pick your password">
                 <button>SignIn</button>
             </form>
+
+            <div>
+                <h2>SignIn With Google</h2>
+                <button @click="signInWithGoogle">Sign In</button>
+            </div>
         </div>
     </div>
 
@@ -67,6 +72,12 @@
             signIn () {
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                     .catch(error => alert('😓' + error.message))
+            },
+            signInWithGoogle () {
+                const provider = new firebase.auth.GoogleAuthProvider()
+                firebase.auth().signInWithPopup(provider)
+                    .catch(error => alert('😓' + error.message))
+                    .then(data => console.log(data.user, data.credential.accessToken))
             }
         },
 
