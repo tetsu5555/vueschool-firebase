@@ -115,6 +115,7 @@
                 },
                 updatePassword () {
                     this.authUser.updatePassword(this.newPassword)
+                        .catch(error => alert('😓' + error.message))
                         .then(() => { this.newPassword = '' })
                 }
             },
