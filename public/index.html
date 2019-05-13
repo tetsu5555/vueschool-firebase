@@ -14,6 +14,8 @@
         <h1>Vue School - Firebase Authentication</h1>
         <div v-if="authUser">
             <h2>Signed In As: {{ authUser.email }}</h2>
+            <img :src="authUser.photoURL" height="150">
+            <p>What's up {{ authUser.displayName || 'friend' }}</p>
             <button @click="signout">Signout</button>
         </div>
 
@@ -61,29 +63,31 @@
             },
 
 
-        methods: {
-            register () {
-                firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-                    .catch(error => alert('😓' + error.message))
+            methods: {
+                register() {
+                    firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                        .catch(error => alert('😓' + error.message))
+                },
+                signout() {
+                    firebase.auth().signOut()
+                },
+                signIn() {
+                    firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+                        .catch(error => alert('😓' + error.message))
+                },
+                signInWithGoogle() {
+                    const provider = new firebase.auth.GoogleAuthProvider()
+                    firebase.auth().signInWithPopup(provider)
+                        .catch(error => alert('😓' + error.message))
+                        .then(data => console.log(data.user, data.credential.accessToken))
+                }
             },
-            signout () {
-                firebase.auth().signOut()
-            },
-            signIn () {
-                firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-                    .catch(error => alert('😓' + error.message))
-            },
-            signInWithGoogle () {
-                const provider = new firebase.auth.GoogleAuthProvider()
-                firebase.auth().signInWithPopup(provider)
-                    .catch(error => alert('😓' + error.message))
-                    .then(data => console.log(data.user, data.credential.accessToken))
-            }
-        },
 
 
-            created () {
-                firebase.auth().onAuthStateChanged(user => { this.authUser = user })
+            created() {
+                firebase.auth().onAuthStateChanged(user => {
+                    this.authUser = user
+                })
             }
         })
     </script>
