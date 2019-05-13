@@ -12,8 +12,11 @@
 
     <div id="app">
         <h1>Vue School - Firebase Authentication</h1>
+        <div v-if="authUser">
+            <h2>Signed In As: {{ authUser.email }}</h2>
+        </div>
 
-        <div>
+        <div v-else>
             <form @submit.prevent="register">
                 <h2>Register</h2>
                 <input type="email" v-model="email" placeholder="Type your email">
@@ -39,12 +42,20 @@
             el: '#app',
             data: {
                 email: '',
-                password: ''
+                password: '',
+                authUser: null
             },
+
+
             methods: {
                 register() {
                     firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 }
+            },
+
+
+            created () {
+                firebase.auth().onAuthStateChanged(user => { this.authUser = user })
             }
         })
     </script>
