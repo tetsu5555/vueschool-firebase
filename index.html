@@ -14,6 +14,7 @@
         <h1>Vue School - Firebase Authentication</h1>
         <div v-if="authUser">
             <h2>Signed In As: {{ authUser.email }}</h2>
+            <button @click="signout">Signout</button>
         </div>
 
         <div v-else>
@@ -50,6 +51,9 @@
             methods: {
                 register() {
                     firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                },
+                signout () {
+                    firebase.auth().signOut()
                 }
             },
 
