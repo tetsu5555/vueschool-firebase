@@ -24,6 +24,13 @@
                 <input type="password" v-model="password" placeholder="Pick your password">
                 <button>Register</button>
             </form>
+
+            <form @submit.prevent="signIn">
+                <h2>SignIn</h2>
+                <input type="email" v-model="email" placeholder="Type your email">
+                <input type="password" v-model="password" placeholder="Pick your password">
+                <button>SignIn</button>
+            </form>
         </div>
     </div>
 
@@ -39,6 +46,7 @@
             appId: "1:850972803553:web:7a9220c912ca3885"
         }
         firebase.initializeApp(config)
+
         new Vue({
             el: '#app',
             data: {
@@ -49,11 +57,14 @@
 
 
             methods: {
-                register() {
+                register () {
                     firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 },
                 signout () {
                     firebase.auth().signOut()
+                },
+                signIn () {
+                    firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 }
             },
 
