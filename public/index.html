@@ -30,6 +30,12 @@
                 <input v-model="email" />
                 <button>Update</button>
             </form>
+
+            <form @submit.prevent="updatePassword">
+                <h2>Update Password</h2>
+                <input type="password" v-model="newPassword" />
+                <button>Update</button>
+            </form>
         </div>
 
         <div v-else>
@@ -75,6 +81,7 @@
                 displayName: null,
                 photoURL: null,
                 email: null,
+                newPassword: null,
                 authUser: null
             },
 
@@ -105,6 +112,10 @@
                 },
                 updateEmail () {
                     this.authUser.updateEmail(this.email)
+                },
+                updatePassword () {
+                    this.authUser.updatePassword(this.newPassword)
+                        .then(() => { this.newPassword = '' })
                 }
             },
 
