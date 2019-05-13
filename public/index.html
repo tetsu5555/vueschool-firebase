@@ -13,10 +13,15 @@
     <div id="app">
         <h1>Vue School - Firebase Authentication</h1>
         <div v-if="authUser">
-            <h2>Signed In As: {{ authUser.email }}</h2>
+            <h2>Signed in as {{authUser.email}}
+                <img v-if="linkedGoogle" src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="">
+                <img v-if="linkedPassword" src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_email.svg" alt="">
+            </h2>
             <img :src="authUser.photoURL" height="150">
             <p>What's up {{ authUser.displayName || 'friend' }}</p>
             <button @click="signout">Signout</button>
+            <button v-if="!linkedGoogle" @click="linkGoogle">linkGoogle</button>
+            <button v-else @click="unlinkGoogle">unlinkGoogle</button>
 
             <form @submit.prevent="updateProfile">
                 <h2>Update Profile</h2>
@@ -85,6 +90,17 @@
                 authUser: null
             },
 
+            computed: {
+                linkedGoogle () {
+                    // !!を使ってbooleanに変換する
+                    return !!this.authUser.providerData.find(provider => provider.providerId === 'google.com')
+                },
+                linkedPassword () {
+                    // !!を使ってbooleanに変換する
+                    return !!this.authUser.providerData.find(provider => provider.providerId === 'password')
+                }
+            },
+
 
             methods: {
                 register() {
@@ -103,6 +119,15 @@
                     firebase.auth().signInWithPopup(provider)
                         .catch(error => alert('😓' + error.message))
                         .then(data => console.log(data.user, data.credential.accessToken))
+                },
+                linkGoogle () {
+                    const provider = new firebase.auth.GoogleAuthProvider()
+                    this.authUser.linkWithPopup(provider)
+                        .catch(error => alert('😓' + error.message))
+                        .then(data => console.log(data.user, data.credential.accessToken))
+                },
+                unlinkGoogle () {
+                    this.authUser.unlink('google.com')
                 },
                 updateProfile () {
                     this.authUser.updateProfile({
