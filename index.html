@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Firebase Authentication</title>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>Vue School - Firebase Authentication</h1>
+
+        <div>
+            <form @submit.prevent="register">
+                <h2>Register</h2>
+                <input type="email" v-model="email" placeholder="Type your email">
+                <input type="password" v-model="password" placeholder="Pick your password">
+                <button>Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Firebase
+        const config = {
+            apiKey: "AIzaSyBqmcdKL_6-sEzvSaOrO8Re-PpR3P6UJ44",
+            authDomain: "vueschool-firebase-f8939.firebaseapp.com",
+            databaseURL: "https://vueschool-firebase-f8939.firebaseio.com",
+            projectId: "vueschool-firebase-f8939",
+            storageBucket: "vueschool-firebase-f8939.appspot.com",
+            messagingSenderId: "850972803553",
+            appId: "1:850972803553:web:7a9220c912ca3885"
+        }
+        firebase.initializeApp(config)
+        new Vue({
+            el: '#app',
+            data: {
+                email: '',
+                password: ''
+            },
+            methods: {
+                register() {
+                    firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
